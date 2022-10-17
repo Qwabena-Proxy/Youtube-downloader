@@ -22,6 +22,7 @@ class App(customtkinter.CTk, tkinter.Tk):
         self.download_int = 0
         self.runningtask = 0
         self.color_list = ["red", "green", "white", "pink", "yellow", "blue"]
+        self.called = ""
         self.frame_1 = customtkinter.CTkFrame(master=self, width=830, height=250)
         self.frame_1.place(x=10, y=10)
 
@@ -365,8 +366,12 @@ class App(customtkinter.CTk, tkinter.Tk):
                 self.pathh1 = filedialog.askdirectory()
                 os.chdir(self.pathh1)
                 self.runningtask += 1
-                self.yt.register_on_progress_callback(self.progress1)
-                self.yt.streams.filter(res=self.streams_availabel_resolution_list[self.ix]).first().download()
+                if self.called == "3":
+                    self.downloaded_remaining3.config(text= "Waiting to download....")
+                self.called= "1"
+                threading.Thread(target=self.switch_).start()
+                # self.yt.register_on_progress_callback(self.progress1)
+                # self.yt.streams.filter(res=self.streams_availabel_resolution_list[self.ix]).first().download()
             except OSError as e:
                 self.downloaded_remaining.configure(text="Download cancelled")
         else:
@@ -420,8 +425,12 @@ class App(customtkinter.CTk, tkinter.Tk):
                 self.pathh2 = filedialog.askdirectory()
                 os.chdir(self.pathh2)
                 self.runningtask += 1
-                self.yt.register_on_progress_callback(self.progress2)
-                self.yt.streams.filter(res=self.streams_availabel_resolution_list[self.ix]).first().download()
+                if self.called == "1":
+                    self.downloaded_remaining2.config(text= "Waiting to download....")
+                self.called= "2"
+                threading.Thread(target=self.switch_).start()
+                # self.yt.register_on_progress_callback(self.progress2)
+                # self.yt.streams.filter(res=self.streams_availabel_resolution_list[self.ix]).first().download()
             except OSError as e:
                 self.downloaded_remaining2.configure(text="Download cancelled")
         else:
@@ -476,8 +485,13 @@ class App(customtkinter.CTk, tkinter.Tk):
                 self.pathh3 = filedialog.askdirectory()
                 os.chdir(self.pathh3)
                 self.runningtask += 1
-                self.yt.register_on_progress_callback(self.progress3)
-                self.yt.streams.filter(res=self.streams_availabel_resolution_list[self.ix]).first().download()
+                if self.called == "2":
+                    self.downloaded_remaining3.config(text= "Waiting to download....")
+                self.called= "3"
+                threading.Thread(target=self.switch_).start()
+
+                # self.yt.register_on_progress_callback(self.progress3)
+                # self.yt.streams.filter(res=self.streams_availabel_resolution_list[self.ix]).first().download()
             except OSError as e:
                 self.downloaded_remaining3.configure(text="Download cancelled")
         else:
@@ -487,6 +501,41 @@ class App(customtkinter.CTk, tkinter.Tk):
         # self.d = threading.Thread(target=self.pulll())
         # self.d.start()
 
+    def switch_(self):
+        print("Called")
+        # if runinng task is >= 1 their lab should display waiting
+        self.lock = threading.Lock()
+        if self.called == "1":
+            self.lock.acquire()
+            self.file_d_1()
+            
+        if self.called == "2":
+            self.lock.acquire()
+            self.file_d_2()
+           
+        if self.called == "3":
+            self.lock.acquire()
+            self.file_d_3()
+            
+
+    def file_d_1(self):
+        self.yt.register_on_progress_callback(self.progress1)
+        self.yt.streams.filter(res=self.streams_availabel_resolution_list[self.ix]).first().download()
+        if self.file_progress_1.get() == 1:
+            self.lock.release()
+# https://www.youtube.com/watch?v=U75AweDbrZw
+    def file_d_2(self):
+        self.yt.register_on_progress_callback(self.progress2)
+        self.yt.streams.filter(res=self.streams_availabel_resolution_list[self.ix]).first().download()
+        if self.file_progress_2.get() == 1:
+            self.lock.release()
+
+    def file_d_3(self):
+        self.yt.register_on_progress_callback(self.progress3)
+        self.yt.streams.filter(res=self.streams_availabel_resolution_list[self.ix]).first().download()
+        if self.file_progress_3.get() == 1:
+            self.lock.release()
+
     def progress1(self, stream, chunk, bytes_remaining):
         self.bytesrmaining = bytes_remaining
         self.bytes_downloaded_1 = self.file_to_download_size_1 - self.bytesrmaining
@@ -495,7 +544,7 @@ class App(customtkinter.CTk, tkinter.Tk):
         self.download_percentage.configure(text=f"{self.bytes_downloaded_percentage_1}%")
         self.downloaded_remaining.configure(text=f"{self.bytes_downloaded_1 / 1048576:0.2f}mb of {self.file_to_download_size_1/ 1048576:0.2f}mb")
         print(f"{self.bytes_downloaded_1} bytes downloaded\n{self.bytes_downloaded_percentage_1}% downloaded")
-        if self.file_progress_1.value == 1:
+        if self.file_progress_1.get() == 1:
             self.complete1()
 
     def complete1(self):
@@ -515,7 +564,7 @@ class App(customtkinter.CTk, tkinter.Tk):
         self.download_percentage2.configure(text=f"{self.bytes_downloaded_percentage_2}%")
         self.downloaded_remaining2.configure(text=f"{self.bytes_downloaded_2 / 1048576:0.2f}mb of {self.file_to_download_size_2/ 1048576:0.2f}mb")
         print(f"{self.bytes_downloaded_2} bytes downloaded\n{self.bytes_downloaded_percentage_2}% downloaded")
-        if self.file_progress_2.value == 1:
+        if self.file_progress_2.get() == 1:
             self.complete2()
 
     def complete2(self):
@@ -535,7 +584,7 @@ class App(customtkinter.CTk, tkinter.Tk):
         self.download_percentage3.configure(text=f"{self.bytes_downloaded_percentage_3}%")
         self.downloaded_remaining3.configure(text=f"{self.bytes_downloaded_3 / 1048576:0.2f}mb of {self.file_to_download_size_3/ 1048576:0.2f}mb")
         print(f"{self.bytes_downloaded_3} bytes downloaded\n{self.bytes_downloaded_percentage_3}% downloaded")
-        if self.file_progress_3.value == 1:
+        if self.file_progress_3.get() == 1:
             self.complete3()
 
     def complete3(self):
