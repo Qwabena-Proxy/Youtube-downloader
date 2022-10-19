@@ -376,7 +376,7 @@ class App(customtkinter.CTk, tkinter.Tk):
                 self.downloaded_remaining.configure(text="Download cancelled")
         else:
             print("Download cancelled")
-            # self.downloaded_remaining.configure(text="Download cancelled")
+            self.downloaded_remaining.configure(text="Download cancelled")
 
     def download_two(self):
         self.file_to_download_size_2 = self.yt.streams.filter(
@@ -435,7 +435,7 @@ class App(customtkinter.CTk, tkinter.Tk):
                 self.downloaded_remaining2.configure(text="Download cancelled")
         else:
             print("Download cancelled")
-            # self.downloaded_remaining2.configure(text="Download cancelled")
+            self.downloaded_remaining2.configure(text="Download cancelled")
         # self.ixxx = ix
         # self.d = threading.Thread(target=self.pulll())
         # self.d.start()
