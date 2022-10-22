@@ -97,11 +97,11 @@ class App(customtkinter.CTk, tkinter.Tk):
                                                command=lambda :threading.Thread(target=self.add_f(self.tag144, self.index144)).start())
         self.btn_144.place(x=480, y=200, relwidth=0.105)
 
-        self.btn_160 = customtkinter.CTkButton(master=self.frame_1, text="Audio", text_color_disabled="black",
-                                               state=DISABLED, height=35, fg_color=("red"),
+        self.btn_160 = customtkinter.CTkButton(master=self.frame_1, text="Audio",
+                                               height=35, fg_color=(self.bg_color),
                                                text_font=(None, 11,), corner_radius=16, border_width=0,
                                                border_color=self.border_colorr, hover_color=self.hoverr_color,
-                                               command=lambda :self.add_f("audio","audio"))
+                                               command=self.t160kps)
         self.btn_160.place(x=570, y=200, relwidth=0.105)
 
         self.thumbnail_lab = customtkinter.CTkLabel(master=self.frame_1, text="", fg_color=("#383838"), height=85,
@@ -171,10 +171,14 @@ class App(customtkinter.CTk, tkinter.Tk):
     def t360(self):
         t = threading.Thread(target=self.add_f(self.tag360, self.index360))
         t.start()
-        print(0)
+ 
     def t240(self):
         t = threading.Thread(target=self.add_f(self.tag240, self.index240))
         t.start()
+    def t160kps(self):
+        t = threading.Thread(target=self.add_f(self.tag160kp, self.index160kp))
+        t.start()
+
     # def t1080(self):
     #     t = threading.Thread(target=self.add_f(self.tag1080, self.index1080))
     #     t.start()
@@ -255,7 +259,10 @@ class App(customtkinter.CTk, tkinter.Tk):
         self.streams_availabel = self.yt.streams.filter(file_extension="mp4")
         self.streams_availabel_resolution_list = [stream.resolution for stream in self.streams_availabel]
         self.streams_availabel_itag_list = [stream.itag for stream in self.streams_availabel]
-        # print(self.streams_availabel_resolution_list)
+        print(self.streams_availabel_resolution_list)
+        self.audio_streams_availabel = self.yt.streams.filter(only_audio=True)
+        self.audio_streams_list = [stream.abr for stream in self.audio_streams_availabel]
+        print(self.audio_streams_list)
         # print(self.streams_availabel_itag_list)
         # resolution = [stream.resolution for stream in , progressive=True).all()]
         # print(resolution)
@@ -306,10 +313,11 @@ class App(customtkinter.CTk, tkinter.Tk):
         else:
             self.btn_1080.configure(state=DISABLED, fg_color=("red"))
 
-        # if "160kbps" in self.streams_availabel_resolution_list:
-        #     self.btn_160.configure(state=DISABLED)
-        # else:
-        #     self.btn_160.configure(state=DISABLED)
+        if "160kbps" in self.audio_streams_list:
+            self.index160kp = self.streams_availabel_resolution_list.index("160kbps")
+            self.tag160kp = self.streams_availabel_itag_list[self.index160kp]
+        else:
+            self.btn_160.configure(state=DISABLED)
 
         if self.once == 1:
             self.frame_2_build()
