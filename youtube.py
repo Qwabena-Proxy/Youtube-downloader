@@ -9,11 +9,11 @@ from tkinter import filedialog
 import tkinter
 import customtkinter
 import random
-import os, threading
+import os, threading, base64
 from io import BytesIO
 
 customtkinter.set_appearance_mode("system")
-
+audio= False
 
 class App(customtkinter.CTk, tkinter.Tk):
     def __init__(self):
@@ -97,9 +97,9 @@ class App(customtkinter.CTk, tkinter.Tk):
                                                command=lambda :threading.Thread(target=self.add_f(self.tag144, self.index144)).start())
         self.btn_144.place(x=480, y=200, relwidth=0.105)
 
-        self.btn_160 = customtkinter.CTkButton(master=self.frame_1, text="Audio",
-                                               height=35, fg_color=(self.bg_color),
-                                               text_font=(None, 11,), corner_radius=16, border_width=0,
+        self.btn_160 = customtkinter.CTkButton(master=self.frame_1, text="Audio",text_color_disabled="black",
+                                               height=35, fg_color=("red"),
+                                               state=DISABLED,text_font=(None, 11,), corner_radius=16, border_width=0,
                                                border_color=self.border_colorr, hover_color=self.hoverr_color,
                                                command=self.t160kps)
         self.btn_160.place(x=570, y=200, relwidth=0.105)
@@ -138,13 +138,7 @@ class App(customtkinter.CTk, tkinter.Tk):
         self.frame_2 = customtkinter.CTkFrame(master=self.frame_2, width=790, height=88, )  # fg_color=(self.bg_color))
         self.frame_2.place(x=20, y=196)
 
-    # self.main_frame = tkinter.Frame(self.frame_2)
-    # self.main_frame.pack(fill=BOTH, expand=1)
 
-    # self.lab_frame = tkinter.Canvas(self.main_frame)
-    # self.lab_frame.pack(side=LEFT, fill=BOTH, expand=1)
-
-    # self.lab = tkinter.Tk(self, text="Hell0",)
     def notifyuser(self):
         self.notifyalert = customtkinter.CTkToplevel(master=self, )
         self.notifyalert.title("Error")
@@ -154,6 +148,7 @@ class App(customtkinter.CTk, tkinter.Tk):
         self.notifyalert.geometry("350x200")
 
     def mode(self):
+        global audio
         if self.mode_switch.get() == 1:
             customtkinter.set_appearance_mode("dark")
         else:
@@ -162,12 +157,15 @@ class App(customtkinter.CTk, tkinter.Tk):
     def t1080(self):
         t = threading.Thread(target=self.add_f(self.tag1080, self.index1080))
         t.start()
+
     def t720(self):
         t = threading.Thread(target=self.add_f(self.tag720, self.index720))
         t.start()
+
     def t480(self):
         t = threading.Thread(target=self.add_f(self.tag480, self.index480))
         t.start()
+
     def t360(self):
         t = threading.Thread(target=self.add_f(self.tag360, self.index360))
         t.start()
@@ -175,8 +173,10 @@ class App(customtkinter.CTk, tkinter.Tk):
     def t240(self):
         t = threading.Thread(target=self.add_f(self.tag240, self.index240))
         t.start()
+
     def t160kps(self):
-        t = threading.Thread(target=self.add_f(self.tag160kp, self.index160kp))
+    
+        t = threading.Thread(target=self.add_f("audio", "audio"))
         t.start()
 
     # def t1080(self):
@@ -263,9 +263,7 @@ class App(customtkinter.CTk, tkinter.Tk):
         self.audio_streams_availabel = self.yt.streams.filter(only_audio=True)
         self.audio_streams_list = [stream.abr for stream in self.audio_streams_availabel]
         print(self.audio_streams_list)
-        # print(self.streams_availabel_itag_list)
-        # resolution = [stream.resolution for stream in , progressive=True).all()]
-        # print(resolution)
+
 
         if "240p" in self.streams_availabel_resolution_list:
             self.btn_240.configure(state=NORMAL, fg_color=(self.bg_color))
@@ -277,7 +275,6 @@ class App(customtkinter.CTk, tkinter.Tk):
         if "360p" in self.streams_availabel_resolution_list:
             self.btn_360.configure(state=NORMAL, fg_color=(self.bg_color))
             self.filesize360 = self.yt.streams.filter(res="360p").first().filesize
-            # print(self.filesize360 / 1048576)
             self.index360 = self.streams_availabel_resolution_list.index("360p")
             self.tag360 = self.streams_availabel_itag_list[self.index360]
         else:
@@ -313,11 +310,7 @@ class App(customtkinter.CTk, tkinter.Tk):
         else:
             self.btn_1080.configure(state=DISABLED, fg_color=("red"))
 
-        if "160kbps" in self.audio_streams_list:
-            self.index160kp = self.streams_availabel_resolution_list.index("160kbps")
-            self.tag160kp = self.streams_availabel_itag_list[self.index160kp]
-        else:
-            self.btn_160.configure(state=DISABLED)
+        self.btn_160.configure(state=NORMAL, fg_color=(self.bg_color))
 
         if self.once == 1:
             self.frame_2_build()
@@ -328,9 +321,16 @@ class App(customtkinter.CTk, tkinter.Tk):
     # 30 sec https://youtu.be/r4kL2tqwiOE
     # https://www.youtube.com/watch?v=F5mRW0jo-U4&t=614s django
     def download_one(self):
-        self.file_to_download_size_1 = self.yt.streams.filter(
-            res=self.streams_availabel_resolution_list[self.ix]).first().filesize
-        self.user_decision_1 = tkinter.messagebox.askyesno("Do You Want To Download",f"File Size: {self.file_to_download_size_1/ 1048576:0.2f} MegaBytes")
+        global audio
+        if self.ix == 'audio':
+            audio = True
+        if audio == True:
+            self.file_to_download_size_1 = self.yt.streams.filter(only_audio=True).first().filesize
+            self.user_decision_1 = tkinter.messagebox.askyesno("Do You Want To Download",f"File Size: {self.file_to_download_size_1/ 1048576:0.2f} MegaBytes")
+            # audio= False
+        else:
+            self.file_to_download_size_1 = self.yt.streams.filter(res=self.streams_availabel_resolution_list[self.ix]).first().filesize
+            self.user_decision_1 = tkinter.messagebox.askyesno("Do You Want To Download",f"File Size: {self.file_to_download_size_1/ 1048576:0.2f} MegaBytes")
         if self.user_decision_1 == True:
             # download one section
             self.cc = self.color_list[random.randint(0, 5)]
@@ -387,9 +387,17 @@ class App(customtkinter.CTk, tkinter.Tk):
             self.downloaded_remaining.configure(text="Download cancelled")
 
     def download_two(self):
-        self.file_to_download_size_2 = self.yt.streams.filter(
-            res=self.streams_availabel_resolution_list[self.ix]).first().filesize
-        self.user_decision_2 = tkinter.messagebox.askyesno("Do You Want To Download",f"File Size: {self.file_to_download_size_2/ 1048576:0.2f} MegaBytes")
+        global audio
+        if self.ix == 'audio':
+            audio = True
+        if audio == True:
+            self.file_to_download_size_2 = self.yt.streams.filter(only_audio=True).first().filesize
+            self.user_decision_2 = tkinter.messagebox.askyesno("Do You Want To Download",f"File Size: {self.file_to_download_size_2/ 1048576:0.2f} MegaBytes")
+            # audio= False
+        else:
+            self.file_to_download_size_2 = self.yt.streams.filter(
+                res=self.streams_availabel_resolution_list[self.ix]).first().filesize
+            self.user_decision_2 = tkinter.messagebox.askyesno("Do You Want To Download",f"File Size: {self.file_to_download_size_2/ 1048576:0.2f} MegaBytes")
         if self.user_decision_2 == True:
             # download two section
             self.cc = self.color_list[random.randint(0, 5)]
@@ -449,9 +457,17 @@ class App(customtkinter.CTk, tkinter.Tk):
         # self.d.start()
 
     def download_three(self):
-        self.file_to_download_size_3 = self.yt.streams.filter(
-            res=self.streams_availabel_resolution_list[self.ix]).first().filesize
-        self.user_decision_3 = tkinter.messagebox.askyesno("Do You Want To Download",f"File Size: {self.file_to_download_size_3/ 1048576:0.2f} MegaBytes")
+        global audio
+        if self.ix == 'audio':
+            audio = True
+        if audio == True:
+            self.file_to_download_size_2 = self.yt.streams.filter(only_audio=True).first().filesize
+            self.user_decision_2 = tkinter.messagebox.askyesno("Do You Want To Download",f"File Size: {self.file_to_download_size_2/ 1048576:0.2f} MegaBytes")
+            # audio= False
+        else:
+            self.file_to_download_size_3 = self.yt.streams.filter(
+                res=self.streams_availabel_resolution_list[self.ix]).first().filesize
+            self.user_decision_3 = tkinter.messagebox.askyesno("Do You Want To Download",f"File Size: {self.file_to_download_size_3/ 1048576:0.2f} MegaBytes")
         if self.user_decision_3 == True:
             # download three section
             self.cc = self.color_list[random.randint(0, 5)]
@@ -527,20 +543,42 @@ class App(customtkinter.CTk, tkinter.Tk):
             
 
     def file_d_1(self):
+        global audio
         self.yt.register_on_progress_callback(self.progress1)
-        self.yt.streams.filter(res=self.streams_availabel_resolution_list[self.ix]).first().download()
+        if audio == True:
+            audi= self.yt.streams.filter(only_audio=TRUE).first().download()
+            base, ext = os.path.splitext(audi)
+            converted=base +'.mp3'
+            os.rename(audi,converted)
+        else:
+            self.yt.streams.filter(res=self.streams_availabel_resolution_list[self.ix]).first().download()
         if self.file_progress_1.get() == 1:
             self.lock.release()
+            audio= False
 # https://www.youtube.com/watch?v=U75AweDbrZw
     def file_d_2(self):
+        global audio
         self.yt.register_on_progress_callback(self.progress2)
-        self.yt.streams.filter(res=self.streams_availabel_resolution_list[self.ix]).first().download()
+        if audio == True:
+            audi= self.yt.streams.filter(only_audio=TRUE).first().download()
+            base, ext = os.path.splitext(audi)
+            converted=base +'.mp3'
+            os.rename(audi,converted)
+        else:
+            self.yt.streams.filter(res=self.streams_availabel_resolution_list[self.ix]).first().download()
         if self.file_progress_2.get() == 1:
             self.lock.release()
 
     def file_d_3(self):
+        global audio
         self.yt.register_on_progress_callback(self.progress3)
-        self.yt.streams.filter(res=self.streams_availabel_resolution_list[self.ix]).first().download()
+        if audio == True:
+            audi= self.yt.streams.filter(only_audio=TRUE).first().download()
+            base, ext = os.path.splitext(audi)
+            converted=base +'.mp3'
+            os.rename(audi,converted)
+        else:
+            self.yt.streams.filter(res=self.streams_availabel_resolution_list[self.ix]).first().download()
         if self.file_progress_3.get() == 1:
             self.lock.release()
 
