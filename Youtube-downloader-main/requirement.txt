@@ -1,0 +1,4 @@
+PIL
+pytube
+pyperclip
+customtkinter
