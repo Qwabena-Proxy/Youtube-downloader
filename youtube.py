@@ -14,6 +14,7 @@ from io import BytesIO
 
 customtkinter.set_appearance_mode("system")
 audio= False
+audio_proceed= False
 
 class App(customtkinter.CTk, tkinter.Tk):
     def __init__(self):
@@ -220,49 +221,52 @@ class App(customtkinter.CTk, tkinter.Tk):
 
     def youtube_fetch(self):
         # self.size_display.configure(text="")
-        self.yt = YouTube(self.search_entry.get())
-        self.file_name = self.yt.title
-        self.file_length = self.yt.length
-        self.file_author = self.yt.author
-        self.file_views = self.yt.views
-        self.file_thumbnail = self.yt.thumbnail_url
-        self.thumbnail_lab.place(x=30, y=109)
-        # self.resize_thumbnail()
-        # DISPLAYING THUMBNAIL
-        self.thumbnail_img_data = urlopen(self.file_thumbnail).read()
-        self.thumbnail_img_of_file = Image.open(BytesIO(self.thumbnail_img_data))
-        self.thumbnail_img_of_file = self.thumbnail_img_of_file.resize((200, 85), Image.Resampling.LANCZOS)
-        self.thumbnail_img_of_file = ImageTk.PhotoImage(self.thumbnail_img_of_file)
-        self.thumbnail_lab.configure(image=self.thumbnail_img_of_file)
-        # End of thumnail
+        try:
+            self.yt = YouTube(self.search_entry.get())
+            self.file_name = self.yt.title
+            self.file_length = self.yt.length
+            self.file_author = self.yt.author
+            self.file_views = self.yt.views
+            self.file_thumbnail = self.yt.thumbnail_url
+            self.thumbnail_lab.place(x=30, y=109)
+            # self.resize_thumbnail()
+            # DISPLAYING THUMBNAIL
+            self.thumbnail_img_data = urlopen(self.file_thumbnail).read()
+            self.thumbnail_img_of_file = Image.open(BytesIO(self.thumbnail_img_data))
+            self.thumbnail_img_of_file = self.thumbnail_img_of_file.resize((200, 85), Image.Resampling.LANCZOS)
+            self.thumbnail_img_of_file = ImageTk.PhotoImage(self.thumbnail_img_of_file)
+            self.thumbnail_lab.configure(image=self.thumbnail_img_of_file)
+            # End of thumnail
 
-        self.vid_title.configure(text=f"Title:{self.file_name}    ")
+            self.vid_title.configure(text=f"Title:{self.file_name}    ")
 
-        if self.file_length > 60 and self.file_length < 3600:
-            self.minute = self.file_length // 60
-            self.second = self.file_length % 60
-            self.vid_length.configure(text=f"Length: {self.minute} minutes {self.second} seconds")
+            if self.file_length > 60 and self.file_length < 3600:
+                self.minute = self.file_length // 60
+                self.second = self.file_length % 60
+                self.vid_length.configure(text=f"Length: {self.minute} minutes {self.second} seconds")
 
-        elif self.file_length >= 3600:
-            self.hour = (self.file_length // 60) // 60
-            self.minute = (self.file_length // 60) % 60
-            self.second = self.file_length % 60
-            self.vid_length.configure(text=f"Length: {self.hour} hour {self.minute} minutes {self.second} seconds")
+            elif self.file_length >= 3600:
+                self.hour = (self.file_length // 60) // 60
+                self.minute = (self.file_length // 60) % 60
+                self.second = self.file_length % 60
+                self.vid_length.configure(text=f"Length: {self.hour} hour {self.minute} minutes {self.second} seconds")
 
-        elif self.file_length < 60:
-            self.vid_length.configure(text=f"Length: {self.file_length} seconds")
+            elif self.file_length < 60:
+                self.vid_length.configure(text=f"Length: {self.file_length} seconds")
 
-        self.vid_author.configure(text=f"Author:{self.file_author}")
+            self.vid_author.configure(text=f"Author:{self.file_author}")
 
-        self.vid_views.configure(text=f"Views:{self.file_views}    ")
+            self.vid_views.configure(text=f"Views:{self.file_views}    ")
 
-        self.streams_availabel = self.yt.streams.filter(file_extension="mp4")
-        self.streams_availabel_resolution_list = [stream.resolution for stream in self.streams_availabel]
-        self.streams_availabel_itag_list = [stream.itag for stream in self.streams_availabel]
-        print(self.streams_availabel_resolution_list)
-        self.audio_streams_availabel = self.yt.streams.filter(only_audio=True)
-        self.audio_streams_list = [stream.abr for stream in self.audio_streams_availabel]
-        print(self.audio_streams_list)
+            self.streams_availabel = self.yt.streams.filter(file_extension="mp4")
+            self.streams_availabel_resolution_list = [stream.resolution for stream in self.streams_availabel]
+            self.streams_availabel_itag_list = [stream.itag for stream in self.streams_availabel]
+            print(self.streams_availabel_resolution_list)
+            self.audio_streams_availabel = self.yt.streams.filter(only_audio=True)
+            self.audio_streams_list = [stream.abr for stream in self.audio_streams_availabel]
+            print(self.audio_streams_list)
+        except:
+            messagebox.showerror(title='Error', message='Something went wrong, please check your internet connection and try again!')
 
 
         if "240p" in self.streams_availabel_resolution_list:
@@ -296,7 +300,7 @@ class App(customtkinter.CTk, tkinter.Tk):
 
         if "1080p" in self.streams_availabel_resolution_list:
             self.btn_1080.configure(state=NORMAL, fg_color=(self.bg_color))
-            self.filesize1080 = self.yt.streams.filter(res="1080p").first().filesize
+            # self.filesize1080 = self.yt.streams.filter(res="1080p").first().filesize
             # print(self.filesize1080 / 1048576)
             self.index1080 = self.streams_availabel_resolution_list.index("1080p")
             self.tag1080 = self.streams_availabel_itag_list[self.index1080]
@@ -321,12 +325,15 @@ class App(customtkinter.CTk, tkinter.Tk):
     # 30 sec https://youtu.be/r4kL2tqwiOE
     # https://www.youtube.com/watch?v=F5mRW0jo-U4&t=614s django
     def download_one(self):
+        print(1)
         global audio
         if self.ix == 'audio':
             audio = True
         if audio == True:
             self.file_to_download_size_1 = self.yt.streams.filter(only_audio=True).first().filesize
             self.user_decision_1 = tkinter.messagebox.askyesno("Do You Want To Download",f"File Size: {self.file_to_download_size_1/ 1048576:0.2f} MegaBytes")
+            if self.user_decision_1 == True:
+                audio_proceed= True
             # audio= False
         else:
             self.file_to_download_size_1 = self.yt.streams.filter(res=self.streams_availabel_resolution_list[self.ix]).first().filesize
@@ -358,9 +365,6 @@ class App(customtkinter.CTk, tkinter.Tk):
                                                                text_color=(self.bg_color), text_font=(None, 11, "bold"),
                                                                justify="left", relief="solid")
             self.downloaded_remaining.place(x=355, y=40)
-            # (initialfile=self.tittle + " " + self.streams_availabel_resolution_list[ix],
-            #               defaultextension=".mp4",
-            #               filetypes=[("All Files", "*.*"), ("Video File", "*.mp4")])
             self.download_percentage = customtkinter.CTkLabel(master=self.frame_, text="0%",
                                                               text_color=(self.bg_color), text_font=(None, 11, "bold"),
                                                               justify="left", relief="solid")
@@ -382,18 +386,21 @@ class App(customtkinter.CTk, tkinter.Tk):
                 # self.yt.streams.filter(res=self.streams_availabel_resolution_list[self.ix]).first().download()
             except OSError as e:
                 self.downloaded_remaining.configure(text="Download cancelled")
+                audio= False
         else:
             print("Download cancelled")
-            self.downloaded_remaining.configure(text="Download cancelled")
+            self.download_int -= 1
+            audio= False
+            # self.downloaded_remaining.configure(text="Download cancelled")
 
     def download_two(self):
+        print(2)
         global audio
         if self.ix == 'audio':
             audio = True
         if audio == True:
             self.file_to_download_size_2 = self.yt.streams.filter(only_audio=True).first().filesize
             self.user_decision_2 = tkinter.messagebox.askyesno("Do You Want To Download",f"File Size: {self.file_to_download_size_2/ 1048576:0.2f} MegaBytes")
-            # audio= False
         else:
             self.file_to_download_size_2 = self.yt.streams.filter(
                 res=self.streams_availabel_resolution_list[self.ix]).first().filesize
@@ -449,21 +456,21 @@ class App(customtkinter.CTk, tkinter.Tk):
                 # self.yt.streams.filter(res=self.streams_availabel_resolution_list[self.ix]).first().download()
             except OSError as e:
                 self.downloaded_remaining2.configure(text="Download cancelled")
+                audio= False
         else:
             print("Download cancelled")
-            self.downloaded_remaining2.configure(text="Download cancelled")
-        # self.ixxx = ix
-        # self.d = threading.Thread(target=self.pulll())
-        # self.d.start()
+            self.download_int -= 1
+            audio= False
+            # self.downloaded_remaining2.configure(text="Download cancelled")
 
     def download_three(self):
+        print(3)
         global audio
         if self.ix == 'audio':
             audio = True
         if audio == True:
-            self.file_to_download_size_2 = self.yt.streams.filter(only_audio=True).first().filesize
-            self.user_decision_2 = tkinter.messagebox.askyesno("Do You Want To Download",f"File Size: {self.file_to_download_size_2/ 1048576:0.2f} MegaBytes")
-            # audio= False
+            self.file_to_download_size_3 = self.yt.streams.filter(only_audio=True).first().filesize
+            self.user_decision_3 = tkinter.messagebox.askyesno("Do You Want To Download",f"File Size: {self.file_to_download_size_3/ 1048576:0.2f} MegaBytes")
         else:
             self.file_to_download_size_3 = self.yt.streams.filter(
                 res=self.streams_availabel_resolution_list[self.ix]).first().filesize
@@ -518,12 +525,13 @@ class App(customtkinter.CTk, tkinter.Tk):
                 # self.yt.streams.filter(res=self.streams_availabel_resolution_list[self.ix]).first().download()
             except OSError as e:
                 self.downloaded_remaining3.configure(text="Download cancelled")
+                audio= False
         else:
             print("Download cancelled")
-            self.downloaded_remaining3.configure(text="Download cancelled")
-        # self.ixxx = ix
-        # self.d = threading.Thread(target=self.pulll())
-        # self.d.start()
+            self.download_int -= 1
+            audio= False
+            # self.downloaded_remaining3.configure(text="Download cancelled")
+
 
     def switch_(self):
         print("Called")
@@ -591,16 +599,16 @@ class App(customtkinter.CTk, tkinter.Tk):
         self.downloaded_remaining.configure(text=f"{self.bytes_downloaded_1 / 1048576:0.2f}mb of {self.file_to_download_size_1/ 1048576:0.2f}mb")
         print(f"{self.bytes_downloaded_1} bytes downloaded\n{self.bytes_downloaded_percentage_1}% downloaded")
         if self.file_progress_1.get() == 1:
-            self.complete1()
+            self.complete()
 
-    def complete1(self):
-        self.runningtask -= 1
-        self.complete1alert = customtkinter.CTkToplevel(master=self, )
-        self.complete1alert.title("Info")
-        self.dlable = customtkinter.CTkLabel(master=self.complete1alert, text="Download complete!", text_font=(None, 15, "bold"))
-        self.dlable.place(relx=0.2, rely=0.37)
-        self.complete1alert.geometry("350x200")
-        print("Done")
+    # def complete1(self):
+    #     self.runningtask -= 1
+    #     self.complete1alert = customtkinter.CTkToplevel(master=self, )
+    #     self.complete1alert.title("Info")
+    #     self.dlable = customtkinter.CTkLabel(master=self.complete1alert, text="Download complete!", text_font=(None, 15, "bold"))
+    #     self.dlable.place(relx=0.2, rely=0.37)
+    #     self.complete1alert.geometry("350x200")
+    #     print("Done")
 
     def progress2(self, stream, chunk, bytes_remaining):
         self.bytesrmaining = bytes_remaining
@@ -611,16 +619,16 @@ class App(customtkinter.CTk, tkinter.Tk):
         self.downloaded_remaining2.configure(text=f"{self.bytes_downloaded_2 / 1048576:0.2f}mb of {self.file_to_download_size_2/ 1048576:0.2f}mb")
         print(f"{self.bytes_downloaded_2} bytes downloaded\n{self.bytes_downloaded_percentage_2}% downloaded")
         if self.file_progress_2.get() == 1:
-            self.complete2()
+            self.complete()
 
-    def complete2(self):
-        self.runningtask -= 1
-        self.complete1alert = customtkinter.CTkToplevel(master=self, )
-        self.complete1alert.title("Info")
-        self.dlable = customtkinter.CTkLabel(master=self.complete1alert, text="Download complete!", text_font=(None, 15, "bold"))
-        self.dlable.place(relx=0.2, rely=0.37)
-        self.complete1alert.geometry("350x200")
-        print("Done")
+    # def complete2(self):
+    #     self.runningtask -= 1
+    #     self.complete1alert = customtkinter.CTkToplevel(master=self, )
+    #     self.complete1alert.title("Info")
+    #     self.dlable = customtkinter.CTkLabel(master=self.complete1alert, text="Download complete!", text_font=(None, 15, "bold"))
+    #     self.dlable.place(relx=0.2, rely=0.37)
+    #     self.complete1alert.geometry("350x200")
+    #     print("Done")
 
     def progress3(self, stream, chunk, bytes_remaining):
         self.bytesrmaining = bytes_remaining
@@ -631,9 +639,9 @@ class App(customtkinter.CTk, tkinter.Tk):
         self.downloaded_remaining3.configure(text=f"{self.bytes_downloaded_3 / 1048576:0.2f}mb of {self.file_to_download_size_3/ 1048576:0.2f}mb")
         print(f"{self.bytes_downloaded_3} bytes downloaded\n{self.bytes_downloaded_percentage_3}% downloaded")
         if self.file_progress_3.get() == 1:
-            self.complete3()
+            self.complete()
 
-    def complete3(self):
+    def complete(self):
         self.runningtask -= 1
         self.complete1alert = customtkinter.CTkToplevel(master=self, )
         self.complete1alert.title("Info")
