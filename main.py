@@ -31,7 +31,7 @@ class App(customtkinter.CTk, tkinter.Tk):
         self.frame_2.place(x=10, y=380)
         # Mode switch
         self.mode_switch = customtkinter.CTkSwitch(master=self, text="Mode", text_color=("black", "white"),
-                                                   command=self.mode, text_font=(None, 11, "bold"))
+                                                   command=self.mode, font=(None, 11, "bold"))
         self.mode_switch.place(x=10, y=675)
 
     def frame_1_build(self):
@@ -41,66 +41,66 @@ class App(customtkinter.CTk, tkinter.Tk):
         self.down = 10
         self.new = "1"
         self.search_entry = customtkinter.CTkEntry(master=self.frame_1, placeholder_text="URL", fg_color=("white"),
-                                                   text_color=("black"), height=35, text_font=(None, 15), width=500,
+                                                   text_color=("black"), height=35, font=(None, 15), width=500,
                                                    border_width=0, border_color="#c71c72", )
         self.search_entry.place(x=30, y=30)
 
         self.paste_btn = customtkinter.CTkButton(master=self.frame_1, text="Paste", height=35, fg_color=(self.bg_color),
-                                                 text_font=(None, 13,), border_width=0, border_color=self.border_colorr,
+                                                 font=(None, 13,), border_width=0, border_color=self.border_colorr,
                                                  hover_color=self.hoverr_color, command=self.paste_fnc)
         self.paste_btn.place(x=30, y=68, relwidth=0.105)
 
         self.search_btn = customtkinter.CTkButton(master=self.frame_1, text="Search", height=35,
-                                                  fg_color=(self.bg_color), text_font=(None, 11,), border_width=0,
+                                                  fg_color=(self.bg_color), font=(None, 11,), border_width=0,
                                                   border_color="#c71c72", hover_color=self.hoverr_color,
                                                   command=self.youtubefetchthread)
         self.search_btn.place(x=535, y=30, relwidth=0.1)
 
         self.btn_1080 = customtkinter.CTkButton(master=self.frame_1, text="1080p", text_color_disabled="black",
                                                 state=DISABLED, height=35, fg_color=("red"),
-                                                text_font=(None, 11,), corner_radius=16, border_width=0,
+                                                font=(None, 11,), corner_radius=16, border_width=0,
                                                 border_color=self.border_colorr, hover_color=self.hoverr_color,
                                                 command=self.t1080)
         self.btn_1080.place(x=30, y=200, relwidth=0.1)
 
         self.btn_720 = customtkinter.CTkButton(master=self.frame_1, text="720p", text_color_disabled="black",
                                                state=DISABLED, height=35, fg_color=("red"),
-                                               text_font=(None, 11,), corner_radius=16, border_width=0,
+                                               font=(None, 11,), corner_radius=16, border_width=0,
                                                border_color=self.border_colorr, hover_color=self.hoverr_color,
                                                command=self.t720)
         self.btn_720.place(x=120, y=200, relwidth=0.1)
 
         self.btn_480 = customtkinter.CTkButton(master=self.frame_1, text="480p", text_color_disabled="black",
                                                state=DISABLED, height=35, fg_color=("red"),
-                                               text_font=(None, 11,), corner_radius=16, border_width=0,
+                                               font=(None, 11,), corner_radius=16, border_width=0,
                                                border_color=self.border_colorr, hover_color=self.hoverr_color,
                                                command=self.t480)
         self.btn_480.place(x=210, y=200, relwidth=0.1)
 
         self.btn_360 = customtkinter.CTkButton(master=self.frame_1, text="360p", text_color_disabled="black",
                                                state=DISABLED, height=35, fg_color=("red"),
-                                               text_font=(None, 11,), corner_radius=16, border_width=0,
+                                               font=(None, 11,), corner_radius=16, border_width=0,
                                                border_color=self.border_colorr, hover_color=self.hoverr_color,
                                                command=self.t360)
         self.btn_360.place(x=300, y=200, relwidth=0.1)
 
         self.btn_240 = customtkinter.CTkButton(master=self.frame_1, text="240p", text_color_disabled="black",
                                                state=DISABLED, height=35, fg_color=("red"),
-                                               text_font=(None, 11,), corner_radius=16, border_width=0,
+                                               font=(None, 11,), corner_radius=16, border_width=0,
                                                border_color=self.border_colorr, hover_color=self.hoverr_color,
                                                command=self.t240)
         self.btn_240.place(x=390, y=200, relwidth=0.1)
 
         self.btn_144 = customtkinter.CTkButton(master=self.frame_1, text="144p", text_color_disabled="black",
                                                state=DISABLED, height=35, fg_color=("red"),
-                                               text_font=(None, 11,), corner_radius=16, border_width=0,
+                                               font=(None, 11,), corner_radius=16, border_width=0,
                                                border_color=self.border_colorr, hover_color=self.hoverr_color,
                                                command=lambda :threading.Thread(target=self.add_f(self.tag144, self.index144)).start())
         self.btn_144.place(x=480, y=200, relwidth=0.105)
 
         self.btn_160 = customtkinter.CTkButton(master=self.frame_1, text="Audio",text_color_disabled="black",
                                                height=35, fg_color=("red"),
-                                               state=DISABLED,text_font=(None, 11,), corner_radius=16, border_width=0,
+                                               state=DISABLED,font=(None, 11,), corner_radius=16, border_width=0,
                                                border_color=self.border_colorr, hover_color=self.hoverr_color,
                                                command=self.t160kps)
         self.btn_160.place(x=570, y=200, relwidth=0.105)
@@ -110,23 +110,24 @@ class App(customtkinter.CTk, tkinter.Tk):
         # self.thumbnail_lab.place(x=30, y=109)
         # End of thumnail
 
-        self.vid_title = customtkinter.CTkLabel(master=self.frame_1, text="", text_font=(None, 11, "bold"))
+        self.vid_title = customtkinter.CTkLabel(master=self.frame_1, text="", font=(None, 11, "bold"))
         self.vid_title.place(x=250, y=109)
 
-        self.vid_length = customtkinter.CTkLabel(master=self.frame_1, text="", text_font=(None, 11, "bold"))
+        self.vid_length = customtkinter.CTkLabel(master=self.frame_1, text="", font=(None, 11, "bold"))
         self.vid_length.place(x=250, y=130)
 
-        self.vid_author = customtkinter.CTkLabel(master=self.frame_1, text="", text_font=(None, 11, "bold"))
+        self.vid_author = customtkinter.CTkLabel(master=self.frame_1, text="", font=(None, 11, "bold"))
         self.vid_author.place(x=250, y=151)
 
-        self.vid_views = customtkinter.CTkLabel(master=self.frame_1, text="", text_font=(None, 11, "bold"))
+        self.vid_views = customtkinter.CTkLabel(master=self.frame_1, text="", font=(None, 11, "bold"))
         self.vid_views.place(x=250, y=172)
 
-        self.text_img = Image.open("proxytube1.png")
-        self.text_img = self.text_img.resize((400, 120), Image.Resampling.LANCZOS)
-        self.text_img = ImageTk.PhotoImage(self.text_img)
+        _img = Image.open("proxytube1.png")
+        _img = _img.resize((400, 120), Image.Resampling.LANCZOS)
+        self.text_img = customtkinter.CTkImage(light_image=_img,dark_image=_img, size=(400, 120)
+)
 
-        self.size_display = customtkinter.CTkLabel(master=self, image=self.text_img, text_font=(None, 11, "bold"), border=0)
+        self.size_display = customtkinter.CTkLabel(master=self, text='', image=self.text_img, font=(None, 11, "bold"))
         self.size_display.place(x=170, y=260)
 
     def frame_2_build(self):
@@ -144,7 +145,7 @@ class App(customtkinter.CTk, tkinter.Tk):
         self.notifyalert = customtkinter.CTkToplevel(master=self, )
         self.notifyalert.title("Error")
         self.nlable = customtkinter.CTkLabel(master=self.notifyalert, text="No room availabel for download!!!",
-                                             text_font=(None, 13, "bold"))
+                                             font=(None, 13, "bold"))
         self.nlable.place(relx=0.13, rely=0.37)
         self.notifyalert.geometry("350x200")
 
@@ -207,9 +208,9 @@ class App(customtkinter.CTk, tkinter.Tk):
     def resize_thumbnail(self):
         lis = ["try.jpg", "youtube.jpg"]
         # Resizing of image
-        self.thumbnail_img = Image.open(lis[random.randint(0, 1)])
-        self.thumbnail_img = self.thumbnail_img.resize((200, 85), Image.Resampling.LANCZOS)
-        self.thumbnail_img = ImageTk.PhotoImage(self.thumbnail_img)
+        thumbnail_img = Image.open(lis[random.randint(0, 1)])
+        thumbnail_img = thumbnail_img.resize((200, 85), Image.Resampling.LANCZOS)
+        self.thumbnail_img = customtkinter.CTkImage(light_image=thumbnail_img,dark_image=thumbnail_img, size=(200, 85))
 
     def paste_fnc(self):
         self.search_entry.delete(0, END)
@@ -357,17 +358,17 @@ class App(customtkinter.CTk, tkinter.Tk):
             else:
                 self.tittle = self.tittle_to_be_check
 
-            self.file_title = customtkinter.CTkLabel(master=self.frame_, justify="left", relief="solid", text=self.tittle,
-                                                     text_font=(None, 11, "bold"))
+            self.file_title = customtkinter.CTkLabel(master=self.frame_, justify="left", text=self.tittle,
+                                                     font=(None, 11, "bold"))
             self.file_title.place(x=190, y=10)  # , relwidth=0.9)
 
             self.downloaded_remaining = customtkinter.CTkLabel(master=self.frame_, text=f"0mb of {self.file_to_download_size_1/ 1048576:0.2f}mb",
-                                                               text_color=(self.bg_color), text_font=(None, 11, "bold"),
-                                                               justify="left", relief="solid")
+                                                               text_color=(self.bg_color), font=(None, 11, "bold"),
+                                                               justify="left",)# relief="solid")
             self.downloaded_remaining.place(x=355, y=40)
             self.download_percentage = customtkinter.CTkLabel(master=self.frame_, text="0%",
-                                                              text_color=(self.bg_color), text_font=(None, 11, "bold"),
-                                                              justify="left", relief="solid")
+                                                              text_color=(self.bg_color), font=(None, 11, "bold"),
+                                                              justify="left",)# relief="solid")
             self.download_percentage.place(x=670, y=40)
 
             self.file_progress_1 = customtkinter.CTkProgressBar(master=self.frame_, width=500,
@@ -427,17 +428,17 @@ class App(customtkinter.CTk, tkinter.Tk):
             else:
                 self.tittle_2 = self.tittle_to_be_check_2
 
-            self.file_title = customtkinter.CTkLabel(master=self.frame_1, justify="left", relief="solid",
-                                                     text=self.tittle_2, text_font=(None, 11, "bold"))
+            self.file_title = customtkinter.CTkLabel(master=self.frame_1, justify="left", #relief="solid",
+                                                     text=self.tittle_2, font=(None, 11, "bold"))
             self.file_title.place(x=190, y=10)
 
             self.downloaded_remaining2 = customtkinter.CTkLabel(master=self.frame_1, text=f"0mb of {self.file_to_download_size_2/ 1048576:0.2f}mb",
-                                                                text_color=(self.bg_color), text_font=(None, 11, "bold"),
-                                                                justify="left", relief="solid")
+                                                                text_color=(self.bg_color), font=(None, 11, "bold"),
+                                                                justify="left")#, relief="solid")
             self.downloaded_remaining2.place(x=355, y=40)
             self.download_percentage2 = customtkinter.CTkLabel(master=self.frame_1, text=f"0%",
-                                                               text_color=(self.bg_color), text_font=(None, 11, "bold"),
-                                                               justify="left", relief="solid")
+                                                               text_color=(self.bg_color), font=(None, 11, "bold"),
+                                                               justify="left")#, relief="solid")
             self.download_percentage2.place(x=670, y=40)
 
             self.file_progress_2 = customtkinter.CTkProgressBar(master=self.frame_1, width=500,
@@ -496,17 +497,17 @@ class App(customtkinter.CTk, tkinter.Tk):
             else:
                 self.tittle_3 = self.tittle_to_be_check_3
 
-            self.file_title = customtkinter.CTkLabel(master=self.frame_2, justify="left", relief="solid",
-                                                     text=self.tittle_3, text_font=(None, 11, "bold"))
+            self.file_title = customtkinter.CTkLabel(master=self.frame_2, justify="left", #relief="solid",
+                                                     text=self.tittle_3, font=(None, 11, "bold"))
             self.file_title.place(x=190, y=10)
 
             self.downloaded_remaining3 = customtkinter.CTkLabel(master=self.frame_2, text=f"0mb of {self.file_to_download_size_3/ 1048576:0.2f}mb",
-                                                                text_color=self.bg_color, text_font=(None, 11, "bold"),
-                                                                justify="left", relief="solid")
+                                                                text_color=self.bg_color, font=(None, 11, "bold"),
+                                                                justify="left",)# relief="solid")
             self.downloaded_remaining3.place(x=355, y=40)
             self.download_percentage3 = customtkinter.CTkLabel(master=self.frame_2, text=f"0%",
-                                                               text_color=self.bg_color, text_font=(None, 11, "bold"),
-                                                               justify="left", relief="solid")
+                                                               text_color=self.bg_color, font=(None, 11, "bold"),
+                                                               justify="left",)# relief="solid")
             self.download_percentage3.place(x=670, y=40)
 
             self.file_progress_3 = customtkinter.CTkProgressBar(master=self.frame_2, width=500 ,progress_color=(self.bg_color))
@@ -605,7 +606,7 @@ class App(customtkinter.CTk, tkinter.Tk):
     #     self.runningtask -= 1
     #     self.complete1alert = customtkinter.CTkToplevel(master=self, )
     #     self.complete1alert.title("Info")
-    #     self.dlable = customtkinter.CTkLabel(master=self.complete1alert, text="Download complete!", text_font=(None, 15, "bold"))
+    #     self.dlable = customtkinter.CTkLabel(master=self.complete1alert, text="Download complete!", font=(None, 15, "bold"))
     #     self.dlable.place(relx=0.2, rely=0.37)
     #     self.complete1alert.geometry("350x200")
     #     print("Done")
@@ -625,7 +626,7 @@ class App(customtkinter.CTk, tkinter.Tk):
     #     self.runningtask -= 1
     #     self.complete1alert = customtkinter.CTkToplevel(master=self, )
     #     self.complete1alert.title("Info")
-    #     self.dlable = customtkinter.CTkLabel(master=self.complete1alert, text="Download complete!", text_font=(None, 15, "bold"))
+    #     self.dlable = customtkinter.CTkLabel(master=self.complete1alert, text="Download complete!", font=(None, 15, "bold"))
     #     self.dlable.place(relx=0.2, rely=0.37)
     #     self.complete1alert.geometry("350x200")
     #     print("Done")
@@ -645,7 +646,7 @@ class App(customtkinter.CTk, tkinter.Tk):
         self.runningtask -= 1
         self.complete1alert = customtkinter.CTkToplevel(master=self, )
         self.complete1alert.title("Info")
-        self.dlable = customtkinter.CTkLabel(master=self.complete1alert, text="Download complete!", text_font=(None, 15, "bold"))
+        self.dlable = customtkinter.CTkLabel(master=self.complete1alert, text="Download complete!", font=(None, 15, "bold"))
         self.dlable.place(relx=0.2, rely=0.37)
         self.complete1alert.geometry("350x200")
         print("Done")
@@ -659,7 +660,7 @@ class App(customtkinter.CTk, tkinter.Tk):
     def build(self):
         self.title("Proxytube")
         self.geometry("850x700")
-        self.iconbitmap("ytdicon.ico")
+        # self.iconbitmap("ytdicon.ico")
         self.resizable(0, 0)
         self.call_functions()
         self.mainloop()
@@ -667,3 +668,5 @@ class App(customtkinter.CTk, tkinter.Tk):
 
 if __name__ == '__main__':
     App().build()
+
+# https://www.youtube.com/watch?v=cyKblSwOMck
